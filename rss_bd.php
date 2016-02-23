@@ -20,8 +20,9 @@ while ($row=  pg_fetch_row($urls_rss)){
         $titulo=$arreglo['title'];
         $copete=$arreglo['description'];
         $link=$arreglo['link'];
-        $fecha=$arreglo['pubDate'];
+        $fecha=strftime("%Y-%m-%d %H:%M:%S", strtotime($arreglo['pubDate']));
         $autor=$arreglo['author'];
+        
                 
         consulta("INSERT INTO noticia (titulo, copete, link, fecha,  autor, id_fuente) VALUES ( '$titulo', '$copete', '$link', '$fecha', '$autor', $row[0])"); 
     }
@@ -62,14 +63,22 @@ function mostrarFeed(){
     $muestra="";
     $fuentes= consulta("SELECT id_fuente, nombre, url, pagina FROM fuente;");
     while($row=pg_fetch_row($fuentes)){
-        $noticias= consulta("SELECT * FROM (SELECT n.id_noticia, n.titulo, n.copete, 
-         n.link, n.fecha, n.autor FROM noticia as n WHERE n.id_fuente=".$row[0]." ORDER BY  n.id_noticia DESC LIMIT  3) as m ORDER BY m.id_noticia ASC;");
-        $muestra.="<h2><a href='".$row[2]."'>".$row[1]."</a></h2>";
-        while($row1=pg_fetch_row($muestra)){
+        $noticias=consulta("SELECT n.id_noticia, n.titulo, n.copete, 
+         n.link, n.fecha, n.autor FROM noticia as n WHERE n.id_fuente=".$row[0]." ORDER BY  n.id_noticia DESC LIMIT  3");
+        $muestra.="<h2><a href='".$row[3]."'>".$row[1]."</a></h2>";
+        while($row1=pg_fetch_row($noticias)){
             $muestra.= "<h4>".$row1[1]."</h4><p>".$row1[2]."<br>Autor:".$row1[5]."</p><a href='".$row1[3]."'>Ver más</a>";
         }
         pg_free_result($noticias);
     }
     pg_free_result($fuentes);
     echo $muestra;
+}
+
+/*
+ * Devuelve la consulta de la bd en JSON
+ */
+
+function consultaJson(){
+    
 }

@@ -8,7 +8,7 @@
         <?php
         include'rss_bd.php';
         cargarFeed();
-        //mostrarFeed();
+        mostrarFeed();
         ?>
     </body>
 </html>
