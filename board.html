@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+        <script type="text/javascript">
+            function tomarJson() {
+                $.ajax({
+                    url: 'json.php',
+                    success: function (response) {
+                        console.log(response);
+                        var ul = $('<ul>').appendTo('body');
+                        $(response.fuentes).each(function (index, item) {
+                            ul.append($(document.createElement('li')).text(item.nombre));                           
+                            $(item.noticias).each(function(index2, item2){
+                                ul.append($(document.createElement('li')).text(item2.titulo+item2.copete));
+                              })    
+                        });
+                    }
+                });
+            }
+        </script>
+    </head>
+    <body onload="tomarJson()">
+    </body>
+</html>
